@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfolio de MrEskoo, monteur vidéo spécialisé TikTok, YouTube Shorts et gaming.">
+  <title>MrEskoo’🦅 — Monteur vidéo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-glow glow-red"></div>
+  <div class="bg-glow glow-blue"></div>
+
+  <header class="navbar">
+    <a href="#accueil" class="logo">MrEskoo’<span>🦅</span></a>
+    <nav>
+      <a href="#accueil">Accueil</a>
+      <a href="#apropos">À propos</a>
+      <a href="#montages">Mes montages</a>
+      <a href="#tarifs">Tarifs</a>
+      <a href="#commande">Passer commande</a>
+    </nav>
+    <button class="menu-btn" aria-label="Ouvrir le menu">☰</button>
+  </header>
+
+  <main>
+    <section id="accueil" class="hero">
+      <div class="hero-content reveal">
+        <p class="badge">🎬 MONTEUR VIDÉO • CAPCUT PRO</p>
+        <h1>Je suis le <span>monteur vidéo</span> qu’il te faut.</h1>
+        <p class="hero-text">Des montages dynamiques et propres pour TikTok, YouTube Shorts et vidéos Gaming.</p>
+        <div class="buttons">
+          <a class="btn primary" href="#commande">Passer Commande</a>
+          <a class="btn secondary" href="#montages">Voir mes montages</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="apropos" class="section">
+      <div class="section-title reveal">
+        <p class="eyebrow">QUI SUIS-JE ?</p>
+        <h2>À propos de <span>moi</span></h2>
+      </div>
+      <div class="about-grid">
+        <div class="glass-card reveal">
+          <h3>👋 Salut, moi c’est MrEskoo</h3>
+          <p>Je fais du montage principalement sur CapCut avec la version Pro. Je suis actif sur mes réseaux et disponible pour réaliser tes projets vidéo.</p>
+        </div>
+        <div class="stats reveal">
+          <div class="stat glass-card"><strong>CapCut Pro</strong><small>Logiciel principal</small></div>
+          <div class="stat glass-card"><strong>TikTok</strong><small>Formats courts</small></div>
+          <div class="stat glass-card"><strong>Shorts</strong><small>YouTube</small></div>
+          <div class="stat glass-card"><strong>Gaming</strong><small>Vidéos YouTube</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="montages" class="section">
+      <div class="section-title reveal">
+        <p class="eyebrow">MON TRAVAIL</p>
+        <h2>Mes <span>montages</span></h2>
+      </div>
+      <div class="projects">
+        <article class="project-card reveal">
+          <div class="video-thumb">
+            <div class="play">▶</div>
+          </div>
+          <div class="project-info">
+            <p class="tag">YouTube Short</p>
+            <h3>Ma première réalisation</h3>
+            <a href="https://youtube.com/shorts/AE0JG79S6To" target="_blank" rel="noopener" class="project-link">Regarder le montage ↗</a>
+          </div>
+        </article>
+        <article class="project-card empty reveal">
+          <div class="empty-icon">＋</div>
+          <h3>Prochain montage</h3>
+          <p>De nouvelles réalisations arriveront bientôt.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="tarifs" class="section">
+      <div class="section-title reveal">
+        <p class="eyebrow">SIMPLE & CLAIR</p>
+        <h2>Mes <span>tarifs</span></h2>
+      </div>
+      <div class="pricing">
+        <div class="price-card glass-card reveal">
+          <p class="tag">SHORT</p>
+          <h3>2€ <small>/ short</small></h3>
+          <p>Montage court adapté à TikTok et YouTube Shorts.</p>
+          <a class="btn secondary" href="#commande">Choisir cette offre</a>
+        </div>
+        <div class="price-card featured reveal">
+          <div class="popular">POPULAIRE</div>
+          <p class="tag">RUSH</p>
+          <h3>3,50€ <small>/ 30 min de rush</small></h3>
+          <p>Montage à partir de tes rushs pour créer une vidéo gaming dynamique.</p>
+          <a class="btn primary" href="#commande">Passer Commande</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="commande" class="section order-section">
+      <div class="section-title reveal">
+        <p class="eyebrow">TON PROJET</p>
+        <h2>Passer <span>commande</span></h2>
+        <p>Tu as un projet ? Contacte-moi directement et on en parle.</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-card glass-card reveal">
+          <h3>📩 Mes contacts</h3>
+          <button class="contact-row" data-copy="mreskoo"><span>Discord</span><strong>mreskoo</strong><b>Copier</b></button>
+          <button class="contact-row" data-copy="collabesko@gmail.com"><span>Gmail</span><strong>collabesko@gmail.com</strong><b>Copier</b></button>
+          <div class="socials">
+            <a href="https://www.tiktok.com/@esko.epz" target="_blank" rel="noopener">TikTok ↗</a>
+            <a href="https://www.youtube.com/@exau_epz" target="_blank" rel="noopener">YouTube ↗</a>
+          </div>
+        </div>
+
+        <form class="contact-form glass-card reveal" action="mailto:collabesko@gmail.com" method="post" enctype="text/plain">
+          <input name="nom" type="text" placeholder="Nom / pseudo" required>
+          <input name="email" type="email" placeholder="Ton adresse e-mail" required>
+          <select name="type">
+            <option>Type de montage</option>
+            <option>TikTok</option>
+            <option>YouTube Short</option>
+            <option>YouTube Gaming</option>
+          </select>
+          <textarea name="message" rows="6" placeholder="Décris ton projet..." required></textarea>
+          <button class="btn primary" type="submit">Envoyer ma demande</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <a href="#accueil" class="logo">MrEskoo’🦅</a>
+      <p>Monteur vidéo — CapCut Pro</p>
+    </div>
+    <div class="footer-links">
+      <a href="https://www.tiktok.com/@esko.epz" target="_blank" rel="noopener">TikTok</a>
+      <a href="https://www.youtube.com/@exau_epz" target="_blank" rel="noopener">YouTube</a>
+      <a href="mailto:collabesko@gmail.com">Gmail</a>
+    </div>
+    <small>© 2026 MrEskoo’🦅 — Tous droits réservés.</small>
+  </footer>
+
+  <div id="toast"></div>
+  <script src="script.js"></script>
+</body>
+</html>
