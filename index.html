@@ -119,17 +119,17 @@
           </div>
         </div>
 
-        <form class="contact-form glass-card reveal" action="mailto:collabesko@gmail.com" method="post" enctype="text/plain">
+        <form class="contact-form glass-card reveal" id="orderForm">
           <input name="nom" type="text" placeholder="Nom / pseudo" required>
           <input name="email" type="email" placeholder="Ton adresse e-mail" required>
-          <select name="type">
-            <option>Type de montage</option>
+          <select name="type" required>
+            <option value="" disabled selected>Type de montage</option>
             <option>TikTok</option>
             <option>YouTube Short</option>
             <option>YouTube Gaming</option>
           </select>
           <textarea name="message" rows="6" placeholder="Décris ton projet..." required></textarea>
-          <button class="btn primary" type="submit">Envoyer ma demande</button>
+          <button class="btn primary" type="submit">Passer Commande</button>
         </form>
       </div>
     </section>
