@@ -17,6 +17,7 @@
       <a href="#accueil">Accueil</a>
       <a href="#apropos">À propos</a>
       <a href="#montages">Mes montages</a>
+      <a href="#fonctionnement">Fonctionnement</a>
       <a href="#tarifs">Tarifs</a>
       <a href="#commande">Passer commande</a>
     </nav>
@@ -55,6 +56,53 @@
       </div>
     </section>
 
+
+    <section id="fonctionnement" class="section process-section">
+      <div class="section-title reveal">
+        <p class="eyebrow">COMMENT ÇA MARCHE ?</p>
+        <h2>Mon <span>fonctionnement</span></h2>
+        <p>Un fonctionnement clair : tu valides le rendu avant de payer, puis je t’envoie la version finale sans filigrane.</p>
+      </div>
+
+      <div class="process-grid">
+        <article class="process-card reveal">
+          <div class="process-number">1</div>
+          <h3>Envoi des rushs</h3>
+          <p>Tu m’envoies tes vidéos, ton idée et des références de style si tu en as.</p>
+        </article>
+
+        <article class="process-card reveal">
+          <div class="process-number">2</div>
+          <h3>Style &amp; prix</h3>
+          <p>On valide ensemble le format, le style demandé et le prix avant que je commence le montage.</p>
+        </article>
+
+        <article class="process-card reveal">
+          <div class="process-number">3</div>
+          <h3>Montage</h3>
+          <p>Je m’occupe des cuts, du rythme, des zooms, des effets, du son et de la finition.</p>
+        </article>
+
+        <article class="process-card reveal">
+          <div class="process-number">4</div>
+          <h3>Aperçu avec filigrane</h3>
+          <p>Quand le montage est terminé, je t’envoie un aperçu avec un filigrane pour protéger mon travail avant le paiement. Tu peux me demander les corrections nécessaires.</p>
+        </article>
+
+        <article class="process-card reveal">
+          <div class="process-number">5</div>
+          <h3>Paiement</h3>
+          <p>Une fois que le rendu te convient, tu effectues le paiement du montage.</p>
+        </article>
+
+        <article class="process-card reveal">
+          <div class="process-number">6</div>
+          <h3>Livraison finale</h3>
+          <p>Dès que le paiement est effectué, j’enlève le filigrane et je t’envoie la vidéo finale, propre et prête à être publiée.</p>
+        </article>
+      </div>
+    </section>
+
     <section id="montages" class="section">
       <div class="section-title reveal">
         <p class="eyebrow">MON TRAVAIL</p>
@@ -64,9 +112,10 @@
         <article class="project-card reveal">
           <div class="video-player">
             <iframe
-              src="https://www.youtube.com/embed/AE0JG79S6To"
+              src="https://www.youtube-nocookie.com/embed/AE0JG79S6To?rel=0&modestbranding=1"
               title="Ma première réalisation — YouTube Short"
-              loading="lazy"
+              loading="eager"
+              referrerpolicy="strict-origin-when-cross-origin"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowfullscreen>
             </iframe>
@@ -74,7 +123,7 @@
           <div class="project-info">
             <p class="tag">YouTube Short</p>
             <h3>Ma première réalisation</h3>
-            <a href="https://www.youtube.com/watch?v=AE0JG79S6To" target="_blank" rel="noopener" class="project-link">Ouvrir sur YouTube ↗</a>
+            <a href="https://www.youtube.com/watch?v=AE0JG79S6To" target="_blank" rel="noopener" class="project-link">Regarder le montage ↗</a>
           </div>
         </article>
         <article class="project-card empty reveal">
@@ -125,17 +174,17 @@
           </div>
         </div>
 
-        <form class="contact-form glass-card reveal" id="orderForm">
+        <form class="contact-form glass-card reveal" action="mailto:collabesko@gmail.com" method="post" enctype="text/plain">
           <input name="nom" type="text" placeholder="Nom / pseudo" required>
           <input name="email" type="email" placeholder="Ton adresse e-mail" required>
-          <select name="type" required>
-            <option value="" disabled selected>Type de montage</option>
+          <select name="type">
+            <option>Type de montage</option>
             <option>TikTok</option>
             <option>YouTube Short</option>
             <option>YouTube Gaming</option>
           </select>
           <textarea name="message" rows="6" placeholder="Décris ton projet..." required></textarea>
-          <button class="btn primary" type="submit">Passer Commande</button>
+          <button class="btn primary" type="submit">Envoyer ma demande</button>
         </form>
       </div>
     </section>
