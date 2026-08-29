@@ -35,13 +35,18 @@ document.querySelectorAll('[data-copy]').forEach(button => {
 });
 
 
-// Formulaire de commande : essaie d'abord l'application e-mail par défaut (ex. Gmail),
-// puis propose Gmail Web si aucune application ne prend en charge mailto.
+// Formulaire de commande : ouvre toujours Gmail Web dans un nouvel onglet.
+// Le portfolio reste ouvert dans l'onglet actuel, sur PC comme sur téléphone.
 const orderForm = document.getElementById('orderForm');
 
 if (orderForm) {
   orderForm.addEventListener('submit', (event) => {
     event.preventDefault();
+
+    if (!orderForm.checkValidity()) {
+      orderForm.reportValidity();
+      return;
+    }
 
     const formData = new FormData(orderForm);
     const nom = String(formData.get('nom') || '').trim();
@@ -65,37 +70,22 @@ ${message}
 Envoyé depuis le portfolio MrEskoo.`;
 
     const to = 'collabesko@gmail.com';
-    const mailtoUrl =
-      `mailto:${encodeURIComponent(to)}` +
-      `?subject=${encodeURIComponent(subject)}` +
+    const gmailUrl =
+      `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}` +
+      `&su=${encodeURIComponent(subject)}` +
       `&body=${encodeURIComponent(body)}`;
 
-    // Sur PC, mailto ouvre le gestionnaire d'e-mails par défaut.
-    // Si Gmail (PWA/app) est configuré comme gestionnaire, Gmail s'ouvre.
-    // Le site reste dans son onglet.
-    const fallbackTimer = setTimeout(() => {
-      const useWeb = confirm(
-        'Aucune application e-mail ne semble avoir été ouverte.\n\n' +
-        'Voulez-vous ouvrir Gmail Web avec votre commande préremplie ?'
-      );
+    // Ouvre Gmail Web dans un nouvel onglet et laisse le portfolio ouvert.
+    const gmailWindow = window.open(gmailUrl, '_blank', 'noopener,noreferrer');
 
-      if (useWeb) {
-        const gmailUrl =
-          `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}` +
-          `&su=${encodeURIComponent(subject)}` +
-          `&body=${encodeURIComponent(body)}`;
-        window.open(gmailUrl, '_blank', 'noopener,noreferrer');
-      }
-    }, 1200);
+    if (!gmailWindow) {
+      // Si le navigateur bloque le nouvel onglet, on indique quoi faire.
+      toast.textContent = 'Autorise les fenêtres pop-up pour ouvrir Gmail ✉️';
+    } else {
+      toast.textContent = 'Votre message est prêt dans Gmail ✉️';
+    }
 
-    // Tente l'application/gestionnaire mail du PC sans quitter le portfolio.
-    window.location.href = mailtoUrl;
-
-    // Le changement d'URL vers mailto peut être bloqué par certains navigateurs.
-    window.addEventListener('blur', () => clearTimeout(fallbackTimer), { once: true });
-
-    toast.textContent = 'Votre message est prêt à être envoyé ✉️';
     toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
+    setTimeout(() => toast.classList.remove('show'), 3500);
   });
 }
