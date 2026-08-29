@@ -33,3 +33,36 @@ document.querySelectorAll('[data-copy]').forEach(button => {
     }
   });
 });
+
+
+// Sélection automatique de l'offre depuis la section Tarifs
+const offerSelect = document.getElementById('offre');
+document.querySelectorAll('.offer-choice').forEach(link => {
+  link.addEventListener('click', () => {
+    const offer = link.dataset.offer;
+    if (offerSelect) offerSelect.value = offer;
+  });
+});
+
+// Création d'une demande personnalisée dans Gmail Web
+const orderForm = document.getElementById('order-form');
+if (orderForm) {
+  orderForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(orderForm);
+    const nom = (formData.get('nom') || '').trim();
+    const offre = formData.get('offre') || '';
+    const description = (formData.get('message') || '').trim();
+
+    const subject = `Demande de montage — ${offre}`;
+    const body = `Salut MrEskoo !\n\nJe souhaite passer une commande de montage.\n\n👤 Nom / pseudo : ${nom}\n💰 Offre choisie : ${offre}\n\n📝 Mon projet :\n${description}\n\nMerci !`;
+
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=collabesko@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+
+    toast.textContent = 'Votre demande est prête dans Gmail ✉️';
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  });
+}

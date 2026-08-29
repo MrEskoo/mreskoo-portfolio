@@ -100,3 +100,8 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:45px 8%;display:flex;a
   .process-card p{font-size:16px}
   .process-section .section-title > p:last-child{font-size:16px}
 }
+
+
+/* Formulaire de commande */
+.contact-form select:valid { border-color: rgba(67,111,255,.45); }
+.offer-choice { cursor: pointer; }
