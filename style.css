@@ -8,7 +8,7 @@ a{text-decoration:none;color:inherit}
 .glow-red{background:#ff1744;top:5%;left:-220px}.glow-blue{background:#1877ff;right:-220px;top:35%}
 
 .navbar{position:fixed;top:0;left:0;right:0;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 7%;background:rgba(7,8,13,.72);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.07);z-index:20}
-.logo{font-size:21px;font-weight:800}.logo span{filter:drop-shadow(0 0 8px #ff1744)}
+.logo{font-size:21px;font-weight:800;display:flex;align-items:center;gap:10px}.logo span{filter:drop-shadow(0 0 8px #ff1744)}.profile-photo{width:40px;height:40px;object-fit:cover;border-radius:50%;border:2px solid rgba(255,255,255,.2)}
 nav{display:flex;gap:28px}nav a{font-size:14px;color:#aeb3c2;transition:.25s}nav a:hover{color:#fff}
 .menu-btn{display:none;background:none;border:0;color:#fff;font-size:26px}
 .hero{min-height:100vh;display:flex;align-items:center;padding:120px 8% 80px;position:relative}
