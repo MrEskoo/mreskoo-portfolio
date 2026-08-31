@@ -157,7 +157,9 @@ function closeReview() {
   reviewModal?.setAttribute('aria-hidden', 'true');
 }
 
-openReviewBtn?.addEventListener('click', () => {
+openReviewBtn?.addEventListener('click', (event) => {
+  event.preventDefault();
+  event.stopPropagation();
   reviewModal?.classList.add('open');
   reviewModal?.setAttribute('aria-hidden', 'false');
   setStars(0);
@@ -169,7 +171,7 @@ document.querySelectorAll('[data-close-review]').forEach(el => el.addEventListen
 document.addEventListener('keydown', event => { if (event.key === 'Escape') closeReview(); });
 
 if (reviewForm) {
-  reviewForm.addEventListener('submit', event => {
+  reviewForm.addEventListener('submit', async event => {
     event.preventDefault();
     const pseudo = document.getElementById('review-pseudo').value.trim();
     const text = reviewText.value.trim();
@@ -180,12 +182,38 @@ if (reviewForm) {
     if (!text) return showToast('⚠️ Écris ton avis.');
     if (compactLength > 50) return showToast('⚠️ Ton avis dépasse 50 caractères.');
 
-    const personalizedReview = `Bonjour MrEskoo,\n\n⭐ Nouvelle demande d'avis à valider\n\n👤 Pseudo : ${pseudo}\n⭐ Note : ${selectedStars}/5\n📝 Avis : ${text}\n\nÀ valider avant publication.`;
-    const gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=collabesko@gmail.com&su=' +
-      encodeURIComponent('Nouvel avis à valider - ' + pseudo) + '&body=' + encodeURIComponent(personalizedReview);
-    window.open(gmailUrl, '_blank', 'noopener');
-    closeReview();
-    showToast('📨 Ton avis a été envoyé pour validation.');
+    const submitButton = reviewForm.querySelector('button[type="submit"]');
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Envoi...';
+    }
+
+    try {
+      const response = await fetch('/api/review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pseudo, stars: selectedStars, text })
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || 'Erreur lors de l’envoi.');
+      }
+
+      closeReview();
+      reviewForm.reset();
+      setStars(0);
+      if (reviewCount) reviewCount.textContent = '0';
+      showToast('📨 Ton avis a été envoyé sur Discord pour validation !');
+    } catch (error) {
+      showToast('❌ Impossible d’envoyer l’avis sur Discord.');
+      console.error(error);
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Envoyer mon avis';
+      }
+    }
   });
 }
 
