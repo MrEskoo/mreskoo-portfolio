@@ -12,13 +12,14 @@
   <div class="bg-glow glow-blue"></div>
 
   <header class="navbar">
-    <a href="#accueil" class="logo"><img src="profile.jpg" alt="Photo de profil de MrEskoo" class="profile-photo">MrEskoo’<span>🦅</span></a>
+    <a href="#accueil" class="logo"><img src="profile.webp" alt="Photo de profil de MrEskoo" class="profile-photo">MrEskoo’<span>🦅</span></a>
     <nav>
       <a href="#accueil">Accueil</a>
       <a href="#apropos">À propos</a>
       <a href="#montages">Mes montages</a>
       <a href="#fonctionnement">Fonctionnement</a>
       <a href="#tarifs">Tarifs</a>
+      <a href="#avis">Avis</a>
       <a href="#commande">Passer commande</a>
     </nav>
     <button class="menu-btn" aria-label="Ouvrir le menu">☰</button>
@@ -126,6 +127,19 @@
             <a href="https://www.youtube.com/watch?v=AE0JG79S6To" target="_blank" rel="noopener" class="project-link">Regarder le montage ↗</a>
           </div>
         </article>
+        <article class="project-card reveal">
+          <div class="video-player">
+            <video controls preload="metadata" playsinline>
+              <source src="montage2.mp4" type="video/mp4">
+              Ton navigateur ne peut pas lire cette vidéo.
+            </video>
+          </div>
+          <div class="project-info">
+            <p class="tag">Montage vidéo</p>
+            <h3>Nouvelle réalisation</h3>
+            <p>Regarde directement le montage sur le portfolio.</p>
+          </div>
+        </article>
         <article class="project-card empty reveal">
           <div class="empty-icon">＋</div>
           <h3>Prochain montage</h3>
@@ -152,6 +166,54 @@
           <h3>3,50€ <small>/ 30 min de rush</small></h3>
           <p>Montage à partir de tes rushs pour créer une vidéo gaming dynamique.</p>
           <a class="btn primary offer-choice" href="#commande" data-offer="3,50€ / 30 min de rush">Choisir cette offre</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="avis" class="section reviews-section">
+      <div class="section-title reveal">
+        <p class="eyebrow">ILS EN PARLENT</p>
+        <h2>Laissez un <span>avis</span></h2>
+        <p>Ton avis peut aider d’autres personnes à découvrir mon travail.</p>
+      </div>
+
+      <div class="reviews-layout">
+        <div class="reviews-card glass-card reveal">
+          <h3>⭐ Avis clients</h3>
+          <div id="reviews-list" class="reviews-list">
+            <p class="reviews-empty">Aucun avis publié pour le moment.</p>
+          </div>
+        </div>
+
+        <div class="review-action-card glass-card reveal">
+          <h3>Tu veux laisser ton avis ?</h3>
+          <p>Choisis tes étoiles, ton pseudo et écris ton avis.</p>
+          <button class="btn primary" type="button" id="open-review">Laisser un avis</button>
+        </div>
+      </div>
+
+      <div class="review-modal" id="review-modal" aria-hidden="true">
+        <div class="review-modal-backdrop" data-close-review></div>
+        <div class="review-modal-box glass-card" role="dialog" aria-modal="true" aria-labelledby="review-title">
+          <button class="review-close" type="button" data-close-review aria-label="Fermer">×</button>
+          <h3 id="review-title">Laisser un avis</h3>
+          <p class="review-hint">Choisis une note, puis renseigne ton pseudo et ton avis.</p>
+
+          <div class="star-picker" id="star-picker" aria-label="Choisir une note sur 5">
+            <button type="button" class="star" data-star="1" aria-label="1 étoile">★</button>
+            <button type="button" class="star" data-star="2" aria-label="2 étoiles">★</button>
+            <button type="button" class="star" data-star="3" aria-label="3 étoiles">★</button>
+            <button type="button" class="star" data-star="4" aria-label="4 étoiles">★</button>
+            <button type="button" class="star" data-star="5" aria-label="5 étoiles">★</button>
+          </div>
+
+          <form id="review-form" class="review-form">
+            <input id="review-pseudo" name="pseudo" type="text" maxlength="30" placeholder="Ton pseudo" required>
+            <textarea id="review-text" name="avis" rows="5" placeholder="Ton avis..." required></textarea>
+            <div class="review-counter"><span id="review-count">0</span>/50 caractères (les espaces ne comptent pas)</div>
+            <button class="btn primary" type="submit">Envoyer mon avis</button>
+          </form>
+          <p class="review-note">Ton avis sera envoyé pour validation avant d’apparaître publiquement.</p>
         </div>
       </div>
     </section>
