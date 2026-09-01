@@ -22,7 +22,10 @@
       <a href="#avis">Avis</a>
       <a href="#commande">Passer commande</a>
     </nav>
-    <button class="menu-btn" aria-label="Ouvrir le menu">☰</button>
+    <div class="header-actions">
+      <button class="edit-btn" type="button" id="open-admin">Modifier</button>
+      <button class="menu-btn" aria-label="Ouvrir le menu">☰</button>
+    </div>
   </header>
 
   <main>
@@ -263,7 +266,27 @@
     <small>© 2026 MrEskoo’🦅 — Tous droits réservés.</small>
   </footer>
 
+  <div class="admin-modal" id="admin-modal" aria-hidden="true">
+    <div class="admin-backdrop" data-close-admin></div>
+    <div class="admin-box glass-card" role="dialog" aria-modal="true" aria-labelledby="admin-title">
+      <button class="review-close" type="button" data-close-admin aria-label="Fermer">×</button>
+      <h3 id="admin-title">Modifier les avis</h3>
+      <p class="review-hint">Entre ton mot de passe pour gérer les avis publiés.</p>
+      <form id="admin-login-form" class="review-form">
+        <input id="admin-password" type="password" placeholder="Mot de passe" autocomplete="current-password" required>
+        <button class="btn primary" type="submit">Se connecter</button>
+      </form>
+      <div id="admin-panel" class="admin-panel" hidden>
+        <div class="admin-panel-head">
+          <strong>Avis publiés</strong>
+          <button class="btn secondary" type="button" id="admin-refresh">Actualiser</button>
+        </div>
+        <div id="admin-reviews-list" class="admin-reviews-list"></div>
+      </div>
+    </div>
+  </div>
+
   <div id="toast"></div>
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=6"></script>
 </body>
 </html>

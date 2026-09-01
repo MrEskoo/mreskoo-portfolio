@@ -228,3 +228,117 @@ async function loadApprovedReviews() {
 }
 
 loadApprovedReviews();
+
+
+// ===== Espace Modifier / gestion des avis =====
+const adminModal = document.getElementById('admin-modal');
+const openAdminBtn = document.getElementById('open-admin');
+const adminLoginForm = document.getElementById('admin-login-form');
+const adminPassword = document.getElementById('admin-password');
+const adminPanel = document.getElementById('admin-panel');
+const adminReviewsList = document.getElementById('admin-reviews-list');
+const adminRefresh = document.getElementById('admin-refresh');
+let adminSessionPassword = '';
+
+function closeAdmin() {
+  adminModal?.classList.remove('open');
+  adminModal?.setAttribute('aria-hidden', 'true');
+}
+
+function openAdmin() {
+  adminModal?.classList.add('open');
+  adminModal?.setAttribute('aria-hidden', 'false');
+  if (!adminSessionPassword) {
+    adminPanel?.setAttribute('hidden', '');
+    setTimeout(() => adminPassword?.focus(), 50);
+  }
+}
+
+openAdminBtn?.addEventListener('click', openAdmin);
+document.querySelectorAll('[data-close-admin]').forEach(el => el.addEventListener('click', closeAdmin));
+document.addEventListener('keydown', event => { if (event.key === 'Escape' && adminModal?.classList.contains('open')) closeAdmin(); });
+
+function renderAdminReviews(reviews) {
+  if (!adminReviewsList) return;
+  if (!reviews.length) {
+    adminReviewsList.innerHTML = '<p class="admin-empty">Aucun avis publié.</p>';
+    return;
+  }
+  adminReviewsList.innerHTML = reviews.map(review => `
+    <article class="admin-review-item">
+      <div class="admin-review-top">
+        <strong>${escapeHtml(review.pseudo)}</strong>
+        <span class="admin-review-stars">${'★'.repeat(review.stars)}${'☆'.repeat(5-review.stars)}</span>
+      </div>
+      <p>${escapeHtml(review.text)}</p>
+      <button class="admin-delete" type="button" data-delete-review="${escapeHtml(review.id)}">🗑️ Supprimer</button>
+    </article>
+  `).join('');
+}
+
+async function loadAdminReviews() {
+  if (!adminSessionPassword) return;
+  if (adminReviewsList) adminReviewsList.innerHTML = '<p class="admin-empty">Chargement...</p>';
+  try {
+    const response = await fetch('/api/admin-reviews', {
+      headers: { 'X-Admin-Password': adminSessionPassword },
+      cache: 'no-store'
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || 'Impossible de charger les avis.');
+    renderAdminReviews(Array.isArray(data.reviews) ? data.reviews : []);
+  } catch (error) {
+    if (adminReviewsList) adminReviewsList.innerHTML = `<p class="admin-error">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+adminLoginForm?.addEventListener('submit', async event => {
+  event.preventDefault();
+  const password = adminPassword?.value || '';
+  if (!password) return;
+  const button = adminLoginForm.querySelector('button[type="submit"]');
+  if (button) { button.disabled = true; button.textContent = 'Vérification...'; }
+  try {
+    const response = await fetch('/api/admin-reviews', {
+      headers: { 'X-Admin-Password': password },
+      cache: 'no-store'
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || 'Mot de passe incorrect.');
+    adminSessionPassword = password;
+    adminLoginForm.hidden = true;
+    adminPanel?.removeAttribute('hidden');
+    renderAdminReviews(Array.isArray(data.reviews) ? data.reviews : []);
+    showToast('🔓 Mode modification activé.');
+  } catch (error) {
+    showToast('❌ ' + error.message);
+  } finally {
+    if (button) { button.disabled = false; button.textContent = 'Se connecter'; }
+  }
+});
+
+adminRefresh?.addEventListener('click', loadAdminReviews);
+
+adminReviewsList?.addEventListener('click', async event => {
+  const button = event.target.closest('[data-delete-review]');
+  if (!button || !adminSessionPassword) return;
+  if (!confirm('Supprimer cet avis du site ?')) return;
+  button.disabled = true;
+  button.textContent = 'Suppression...';
+  try {
+    const response = await fetch('/api/admin-reviews', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Password': adminSessionPassword },
+      body: JSON.stringify({ id: button.dataset.deleteReview })
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || 'Impossible de supprimer cet avis.');
+    renderAdminReviews(Array.isArray(data.reviews) ? data.reviews : []);
+    await loadApprovedReviews();
+    showToast('🗑️ Avis supprimé.');
+  } catch (error) {
+    showToast('❌ ' + error.message);
+    button.disabled = false;
+    button.textContent = '🗑️ Supprimer';
+  }
+});

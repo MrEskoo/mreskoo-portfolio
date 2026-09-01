@@ -1,0 +1,9 @@
+CONFIGURATION À FAIRE DANS VERCEL
+
+Ajoute une variable d'environnement :
+
+ADMIN_PASSWORD = ton mot de passe secret
+
+Cette valeur reste côté serveur. Ne mets pas le mot de passe dans index.html ou script.js.
+
+Le bouton « Modifier » apparaît en haut à droite du site. Il demande ce mot de passe avant d'afficher les avis publiés et leurs boutons « Supprimer ».
