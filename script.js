@@ -96,17 +96,15 @@ const reviewText = document.getElementById('review-text');
 const reviewsList = document.getElementById('reviews-list');
 let selectedStars = 0;
 
-function escapeHtml(value) {
-  return String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[char]));
-}
+let approvedReviews = [];
 
-function renderReviews(reviews) {
+function renderReviews() {
   if (!reviewsList) return;
-  if (!reviews.length) {
+  if (!approvedReviews.length) {
     reviewsList.innerHTML = '<p class="reviews-empty">Aucun avis publié pour le moment.</p>';
     return;
   }
-  reviewsList.innerHTML = reviews.map(review => `
+  reviewsList.innerHTML = approvedReviews.map(review => `
     <article class="review-item">
       <div class="review-top">
         <span class="review-pseudo">${escapeHtml(review.pseudo)}</span>
@@ -117,15 +115,8 @@ function renderReviews(reviews) {
   `).join('');
 }
 
-async function loadReviews() {
-  try {
-    const response = await fetch('/reviews.json?v=' + Date.now(), { cache: 'no-store' });
-    if (!response.ok) throw new Error('reviews.json introuvable');
-    const reviews = await response.json();
-    renderReviews(Array.isArray(reviews) ? reviews : []);
-  } catch {
-    renderReviews([]);
-  }
+function escapeHtml(value) {
+  return String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[char]));
 }
 
 function setStars(value) {
@@ -141,20 +132,20 @@ starButtons.forEach(star => {
 
 if (reviewText && reviewCount) {
   reviewText.addEventListener('input', () => {
-    let value = reviewText.value;
-    let compact = value.replace(/\s/g, '');
-    if (compact.length > 50) {
-      let result = '', n = 0;
-      for (const char of value) {
+    const count = reviewText.value.replace(/\s/g, '').length;
+    reviewCount.textContent = count;
+    reviewCount.style.color = count > 50 ? '#ff5b72' : '';
+    if (count > 50) {
+      let result = '';
+      let n = 0;
+      for (const char of reviewText.value) {
         if (!/\s/.test(char)) n++;
         if (n > 50) break;
         result += char;
       }
       reviewText.value = result;
-      compact = result.replace(/\s/g, '');
+      reviewCount.textContent = result.replace(/\s/g, '').length;
     }
-    reviewCount.textContent = compact.length;
-    reviewCount.style.color = compact.length >= 50 ? '#ff5b72' : '';
   });
 }
 
@@ -163,7 +154,7 @@ function closeReview() {
   reviewModal?.setAttribute('aria-hidden', 'true');
 }
 
-openReviewBtn?.addEventListener('click', event => {
+openReviewBtn?.addEventListener('click', (event) => {
   event.preventDefault();
   event.stopPropagation();
   reviewModal?.classList.add('open');
@@ -189,7 +180,10 @@ if (reviewForm) {
     if (compactLength > 50) return showToast('⚠️ Ton avis dépasse 50 caractères.');
 
     const submitButton = reviewForm.querySelector('button[type="submit"]');
-    if (submitButton) { submitButton.disabled = true; submitButton.textContent = 'Envoi...'; }
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Envoi...';
+    }
 
     try {
       const response = await fetch('/api/review', {
@@ -197,20 +191,40 @@ if (reviewForm) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pseudo, stars: selectedStars, text })
       });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.error || 'Erreur lors de l’envoi.');
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || 'Erreur lors de l’envoi.');
+      }
+
       closeReview();
       reviewForm.reset();
       setStars(0);
       if (reviewCount) reviewCount.textContent = '0';
-      showToast('📨 Avis envoyé sur Discord pour validation !');
+      showToast('📨 Ton avis a été envoyé sur Discord pour validation !');
     } catch (error) {
-      showToast('❌ Impossible d’envoyer l’avis.');
+      showToast('❌ Impossible d’envoyer l’avis sur Discord.');
       console.error(error);
     } finally {
-      if (submitButton) { submitButton.disabled = false; submitButton.textContent = 'Envoyer mon avis'; }
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Envoyer mon avis';
+      }
     }
   });
 }
 
-loadReviews();
+async function loadApprovedReviews() {
+  try {
+    const response = await fetch('/reviews.json?v=' + Date.now(), { cache: 'no-store' });
+    if (response.ok) {
+      const data = await response.json();
+      if (Array.isArray(data)) approvedReviews = data;
+    }
+  } catch (error) {
+    console.error('Impossible de charger les avis.', error);
+  }
+  renderReviews();
+}
+
+loadApprovedReviews();
