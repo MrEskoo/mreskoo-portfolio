@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "4bec8a69-14f6-45d7-8c69-0988ee55be09",
+    "sourceMessageId": "1544689170222547017",
+    "pseudo": "test",
+    "stars": 5,
+    "text": "dernier test",
+    "createdAt": "2026-09-02T12:43:41.097Z"
+  }
+]
