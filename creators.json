@@ -1,13 +1,13 @@
 [
   {
     "id": "skeletox",
-    "name": "Skeletox",
-    "photo": "",
+    "name": "Snayz",
     "role": "🎥 Créateur",
-    "description": "Montages courts et vidéo YouTube réalisés pour sa chaîne.",
-    "status": "Collaboration",
-    "projects": "3 Shorts • 1 vidéo YouTube",
-    "link": ""
+    "status": "Collaboration en cours",
+    "projects": "1 Shorts • 1 vidéo YouTube",
+    "link": "https://www.youtube.com/@Snayz_yt1",
+    "description": "Montages de short et vidéo YouTube réalisés pour sa chaîne.",
+    "photo": "https://raw.githubusercontent.com/MrEskoo/mreskoo-portfolio/main/assets/creators/4af67351-21e5-486d-ba8a-64683b84a77d.jpg"
   },
   {
     "id": "noah-panchau-2",
