@@ -86,9 +86,12 @@ function parseReviewFromMessage(message) {
   const pseudo = fields.find(f => f.name === '👤 Pseudo')?.value || '';
   const noteValue = fields.find(f => f.name === '⭐ Note')?.value || '';
   const text = fields.find(f => f.name === '📝 Avis')?.value || '';
-  const match = noteValue.match(/\((\d)\/5\)/);
+  const typesValue = fields.find(f => f.name === '🎬 Types de vidéos')?.value || '';
+  const channel = fields.find(f => f.name === '🔗 Chaîne')?.value || '';
+  const match = noteValue.match(/\((\d+(?:\.5)?)\/5\)/);
   const stars = match ? Number(match[1]) : 0;
-  return { pseudo, stars, text };
+  const photo = message?.embeds?.[0]?.thumbnail?.url || '';
+  return { pseudo, stars, text, types: typesValue.split(' • ').map(v => v.trim()).filter(Boolean), channel, photo };
 }
 
 async function editDiscordMessage(channelId, messageId, token, payload) {
@@ -137,7 +140,7 @@ export default async function handler(req, res) {
   try {
     if (customId === 'review_accept') {
       const review = parseReviewFromMessage(interaction.message);
-      if (!review.pseudo || !review.text || !review.stars) throw new Error('Avis introuvable dans le message Discord.');
+      if (!review.pseudo || !review.text || !review.stars || !review.types.length || !review.channel) throw new Error('Avis incomplet dans le message Discord.');
 
       const { reviews, sha } = await getReviews();
       if (!reviews.some(r => r.sourceMessageId === messageId)) {
@@ -147,6 +150,9 @@ export default async function handler(req, res) {
           pseudo: review.pseudo,
           stars: review.stars,
           text: review.text,
+          types: review.types,
+          channel: review.channel,
+          photo: review.photo || '',
           createdAt: new Date().toISOString()
         });
         await saveReviews(reviews, sha, `Avis accepté : ${review.pseudo}`);

@@ -1,344 +1,59 @@
-const menuBtn = document.querySelector('.menu-btn');
-const navbar = document.querySelector('.navbar');
+const menuBtn=document.querySelector('.menu-btn'),navbar=document.querySelector('.navbar');
+menuBtn?.addEventListener('click',()=>navbar.classList.toggle('open'));
+document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>navbar.classList.remove('open')));
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+const toast=document.getElementById('toast');
+function showToast(m){if(!toast)return;toast.textContent=m;toast.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove('show'),2600)}
+function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]))}
+function renderStars(value){let out='';for(let i=1;i<=5;i++){if(value>=i)out+='<span class="full-star">★</span>';else if(value>=i-.5)out+='<span class="half-star">★</span>';else out+='<span class="empty-star">★</span>'}return out}
 
-if (menuBtn) {
-  menuBtn.addEventListener('click', () => navbar.classList.toggle('open'));
-}
+// Copier les coordonnées.
+document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(btn.dataset.copy);showToast(`Copié : ${btn.dataset.copy}`)}catch{showToast(btn.dataset.copy)}}));
 
-document.querySelectorAll('nav a').forEach(link => {
-  link.addEventListener('click', () => navbar.classList.remove('open'));
-});
+// Offres.
+const offerSelect=document.getElementById('offre');
+document.querySelectorAll('.offer-choice').forEach(link=>link.addEventListener('click',()=>{if(offerSelect)offerSelect.value=link.dataset.offer||''}));
+const orderForm=document.getElementById('order-form');
+orderForm?.addEventListener('submit',async e=>{e.preventDefault();const name=orderForm.elements.nom.value.trim(),offer=orderForm.elements.offre.value,message=orderForm.elements.message.value.trim();if(!name||!offer||!message)return showToast('⚠️ Remplis tous les champs.');const msg=`Bonjour MrEskoo,\n\nJe souhaite passer une commande de montage vidéo.\n\n👤 Nom / pseudo : ${name}\n💰 Offre choisie : ${offer}\n📝 Description du projet :\n${message}\n\nMerci !`;try{await navigator.clipboard.writeText(msg);showToast('✅ Ta demande a été copiée !')}catch{const t=document.createElement('textarea');t.value=msg;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();showToast('✅ Ta demande a été copiée !')}});
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.12 });
-
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-const toast = document.getElementById('toast');
-function showToast(message) {
-  toast.textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2200);
-}
-
-// Copie les coordonnées de contact.
-document.querySelectorAll('[data-copy]').forEach(button => {
-  button.addEventListener('click', async () => {
-    const value = button.dataset.copy;
-    try {
-      await navigator.clipboard.writeText(value);
-      showToast(`Copié : ${value}`);
-    } catch {
-      showToast(value);
-    }
-  });
-});
-
-// Sélection automatique de l'offre depuis la section Tarifs.
-const offerSelect = document.getElementById('offre');
-document.querySelectorAll('.offer-choice').forEach(link => {
-  link.addEventListener('click', () => {
-    const offer = link.dataset.offer;
-    if (offerSelect && offer) {
-      offerSelect.value = offer;
-    }
-  });
-});
-
-// Prépare puis copie une demande personnalisée dans le presse-papiers.
-const orderForm = document.getElementById('order-form');
-if (orderForm) {
-  orderForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    const name = orderForm.elements.nom.value.trim();
-    const offer = orderForm.elements.offre.value;
-    const message = orderForm.elements.message.value.trim();
-
-    if (!name || !offer || !message) {
-      showToast('⚠️ Remplis tous les champs.');
-      return;
-    }
-
-    const personalizedMessage = `Bonjour MrEskoo,\n\nJe souhaite passer une commande de montage vidéo.\n\n👤 Nom / pseudo : ${name}\n💰 Offre choisie : ${offer}\n📝 Description du projet :\n${message}\n\nMerci !`;
-
-    try {
-      await navigator.clipboard.writeText(personalizedMessage);
-      showToast('✅ Ta demande a été copiée ! Tu peux maintenant la coller sur Discord ou Gmail.');
-    } catch {
-      const fallback = document.createElement('textarea');
-      fallback.value = personalizedMessage;
-      fallback.style.position = 'fixed';
-      fallback.style.opacity = '0';
-      document.body.appendChild(fallback);
-      fallback.focus();
-      fallback.select();
-      try { document.execCommand('copy'); } catch {}
-      fallback.remove();
-      showToast('✅ Ta demande a été copiée !');
-    }
-  });
-}
-
-// ===== Système d'avis =====
-const reviewModal = document.getElementById('review-modal');
-const openReviewBtn = document.getElementById('open-review');
-const reviewForm = document.getElementById('review-form');
-const starButtons = document.querySelectorAll('.star');
-const reviewCount = document.getElementById('review-count');
-const reviewText = document.getElementById('review-text');
-const reviewsList = document.getElementById('reviews-list');
-let selectedStars = 0;
-
-let approvedReviews = [];
-
-function renderReviews() {
-  if (!reviewsList) return;
-  if (!approvedReviews.length) {
-    reviewsList.innerHTML = '<p class="reviews-empty">Aucun avis publié pour le moment.</p>';
-    return;
-  }
-  reviewsList.innerHTML = approvedReviews.map(review => `
-    <article class="review-item">
-      <div class="review-top">
-        <span class="review-pseudo">${escapeHtml(review.pseudo)}</span>
-        <span class="review-stars" aria-label="${review.stars} sur 5">${'★'.repeat(review.stars)}${'☆'.repeat(5-review.stars)}</span>
-      </div>
-      <p>${escapeHtml(review.text)}</p>
-    </article>
-  `).join('');
-}
-
-function escapeHtml(value) {
-  return String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[char]));
-}
-
-function setStars(value) {
-  selectedStars = value;
-  starButtons.forEach(star => {
-    star.classList.toggle('active', Number(star.dataset.star) <= value);
-  });
-}
-
-starButtons.forEach(star => {
-  star.addEventListener('click', () => setStars(Number(star.dataset.star)));
-});
-
-if (reviewText && reviewCount) {
-  reviewText.addEventListener('input', () => {
-    const count = reviewText.value.replace(/\s/g, '').length;
-    reviewCount.textContent = count;
-    reviewCount.style.color = count > 50 ? '#ff5b72' : '';
-    if (count > 50) {
-      let result = '';
-      let n = 0;
-      for (const char of reviewText.value) {
-        if (!/\s/.test(char)) n++;
-        if (n > 50) break;
-        result += char;
-      }
-      reviewText.value = result;
-      reviewCount.textContent = result.replace(/\s/g, '').length;
-    }
-  });
-}
-
-function closeReview() {
-  reviewModal?.classList.remove('open');
-  reviewModal?.setAttribute('aria-hidden', 'true');
-}
-
-openReviewBtn?.addEventListener('click', (event) => {
-  event.preventDefault();
-  event.stopPropagation();
-  reviewModal?.classList.add('open');
-  reviewModal?.setAttribute('aria-hidden', 'false');
-  setStars(0);
-  reviewForm?.reset();
-  if (reviewCount) reviewCount.textContent = '0';
-});
-
-document.querySelectorAll('[data-close-review]').forEach(el => el.addEventListener('click', closeReview));
-document.addEventListener('keydown', event => { if (event.key === 'Escape') closeReview(); });
-
-if (reviewForm) {
-  reviewForm.addEventListener('submit', async event => {
-    event.preventDefault();
-    const pseudo = document.getElementById('review-pseudo').value.trim();
-    const text = reviewText.value.trim();
-    const compactLength = text.replace(/\s/g, '').length;
-
-    if (!selectedStars) return showToast('⭐ Choisis une note.');
-    if (!pseudo) return showToast('⚠️ Mets ton pseudo.');
-    if (!text) return showToast('⚠️ Écris ton avis.');
-    if (compactLength > 50) return showToast('⚠️ Ton avis dépasse 50 caractères.');
-
-    const submitButton = reviewForm.querySelector('button[type="submit"]');
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.textContent = 'Envoi...';
-    }
-
-    try {
-      const response = await fetch('/api/review', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pseudo, stars: selectedStars, text })
-      });
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        throw new Error(data.error || 'Erreur lors de l’envoi.');
-      }
-
-      closeReview();
-      reviewForm.reset();
-      setStars(0);
-      if (reviewCount) reviewCount.textContent = '0';
-      showToast('📨 Ton avis a été envoyé sur Discord pour validation !');
-    } catch (error) {
-      showToast('❌ Impossible d’envoyer l’avis sur Discord.');
-      console.error(error);
-    } finally {
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.textContent = 'Envoyer mon avis';
-      }
-    }
-  });
-}
-
-async function loadApprovedReviews() {
-  try {
-    const response = await fetch('/reviews.json?v=' + Date.now(), { cache: 'no-store' });
-    if (response.ok) {
-      const data = await response.json();
-      if (Array.isArray(data)) approvedReviews = data;
-    }
-  } catch (error) {
-    console.error('Impossible de charger les avis.', error);
-  }
-  renderReviews();
-}
-
+// ===== Avis =====
+const reviewModal=document.getElementById('review-modal'),openReviewBtn=document.getElementById('open-review'),reviewForm=document.getElementById('review-form'),reviewText=document.getElementById('review-text'),reviewCount=document.getElementById('review-count'),reviewsList=document.getElementById('reviews-list'),starButtons=[...document.querySelectorAll('.star')];
+let selectedStars=0;
+function setStars(v){selectedStars=v;starButtons.forEach((b,i)=>{const n=i+1;b.classList.toggle('active',n<=Math.floor(v));b.classList.toggle('half-active',v>=n-.5&&v<n)})}
+starButtons.forEach(b=>b.addEventListener('click',e=>{const r=b.getBoundingClientRect();const half=e.clientX-r.left<r.width/2;setStars(Number(b.dataset.star)-(half?.5:0))}));
+function closeReview(){reviewModal?.classList.remove('open');reviewModal?.setAttribute('aria-hidden','true')}
+openReviewBtn?.addEventListener('click',()=>{reviewModal?.classList.add('open');reviewModal?.setAttribute('aria-hidden','false');setStars(0);reviewForm?.reset();if(reviewCount)reviewCount.textContent='0'});
+document.querySelectorAll('[data-close-review]').forEach(x=>x.addEventListener('click',closeReview));
+reviewText?.addEventListener('input',()=>{let raw=reviewText.value,n=0,out='';for(const c of raw){if(!/\s/.test(c))n++;if(n>50)break;out+=c}if(out!==raw)reviewText.value=out;if(reviewCount)reviewCount.textContent=out.replace(/\s/g,'').length});
+function fileToDataUrl(file,max=500*1024){return new Promise((resolve,reject)=>{if(!file)return reject(new Error('Photo manquante.'));if(file.size>max)return reject(new Error(`Photo trop lourde (max ${Math.round(max/1024)} Ko).`));const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(new Error('Lecture de la photo impossible.'));r.readAsDataURL(file)})}
+function renderReviews(reviews){if(!reviewsList)return;if(!reviews.length){reviewsList.innerHTML='<p class="reviews-empty">Aucun avis publié pour le moment.</p>';return}reviewsList.innerHTML=reviews.map(r=>`<article class="review-card reveal visible"><div class="review-card-head"><div class="review-person"><img src="${escapeHtml(r.photo||'profile.jpg')}" alt="Photo de ${escapeHtml(r.pseudo)}"><div><strong>${escapeHtml(r.pseudo)}</strong><span>Client</span></div></div><div class="review-stars" aria-label="${escapeHtml(r.stars)}/5">${renderStars(Number(r.stars))}</div></div><div class="review-meta"><span>🎬 ${escapeHtml((r.types||[]).join(' • '))}</span>${r.channel?`<a href="${escapeHtml(r.channel)}" target="_blank" rel="noopener">↗ Voir sa chaîne</a>`:''}</div><blockquote>« ${escapeHtml(r.text)} »</blockquote></article>`).join('')}
+async function loadApprovedReviews(){try{const r=await fetch('/reviews.json?v='+Date.now(),{cache:'no-store'});if(r.ok){const d=await r.json();renderReviews(Array.isArray(d)?d:[])}else renderReviews([])}catch{renderReviews([])}}
+reviewForm?.addEventListener('submit',async e=>{e.preventDefault();const pseudo=document.getElementById('review-pseudo').value.trim(),text=reviewText.value.trim(),types=[...document.querySelectorAll('input[name="videoType"]:checked')].map(x=>x.value),channel=document.getElementById('review-channel').value.trim(),photo=document.getElementById('review-photo').files[0];if(!selectedStars)return showToast('⭐ Choisis une note.');if(!pseudo)return showToast('⚠️ Mets ton pseudo.');if(!types.length)return showToast('🎬 Choisis au moins un type de vidéo.');if(!/^https?:\/\//i.test(channel))return showToast('🔗 Mets un lien de chaîne valide.');if(!text||text.replace(/\s/g,'').length>50)return showToast('⚠️ Ton avis doit faire 50 caractères maximum hors espaces.');let photoData;try{photoData=await fileToDataUrl(photo)}catch(err){return showToast('⚠️ '+err.message)}const btn=reviewForm.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='Envoi...';try{const r=await fetch('/api/review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pseudo,stars:selectedStars,text,types,channel,photoData})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Erreur');closeReview();showToast('📨 Avis envoyé sur Discord pour validation !')}catch(err){console.error(err);showToast('❌ '+err.message)}finally{btn.disabled=false;btn.textContent='Envoyer mon avis'}});
 loadApprovedReviews();
 
+// ===== Modifier =====
+const adminModal=document.getElementById('admin-modal'),openAdminBtn=document.getElementById('open-admin'),adminLoginForm=document.getElementById('admin-login-form'),adminPassword=document.getElementById('admin-password'),adminPanel=document.getElementById('admin-panel'),adminReviewsList=document.getElementById('admin-reviews-list'),adminRefresh=document.getElementById('admin-refresh');
+let adminSessionPassword='';
+function closeAdmin(){adminModal?.classList.remove('open');adminModal?.setAttribute('aria-hidden','true')}
+function openAdmin(){adminModal?.classList.add('open');adminModal?.setAttribute('aria-hidden','false');if(!adminSessionPassword){adminPanel?.setAttribute('hidden','');setTimeout(()=>adminPassword?.focus(),50)}}
+openAdminBtn?.addEventListener('click',openAdmin);document.querySelectorAll('[data-close-admin]').forEach(x=>x.addEventListener('click',closeAdmin));
+function renderAdminReviews(reviews){if(!adminReviewsList)return;adminReviewsList.innerHTML=reviews.length?reviews.map(r=>`<article class="admin-review-item"><div class="admin-review-top"><strong>${escapeHtml(r.pseudo)}</strong><span class="admin-review-stars">${renderStars(Number(r.stars))}</span></div><p>${escapeHtml(r.text)}</p><button class="admin-delete" type="button" data-delete-review="${escapeHtml(r.id)}">🗑️ Supprimer</button></article>`).join(''):'<p class="admin-empty">Aucun avis publié.</p>'}
+async function apiAdmin(path,options={}){const r=await fetch(path,{...options,headers:{'Content-Type':'application/json','X-Admin-Password':adminSessionPassword,...(options.headers||{})}});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Erreur');return d}
+async function loadAdminReviews(){try{const d=await apiAdmin('/api/admin-reviews');renderAdminReviews(d.reviews||[])}catch(e){adminReviewsList.innerHTML=`<p class="admin-error">${escapeHtml(e.message)}</p>`}}
+adminLoginForm?.addEventListener('submit',async e=>{e.preventDefault();const p=adminPassword.value;if(!p)return;const b=adminLoginForm.querySelector('button');b.disabled=true;b.textContent='Vérification...';try{adminSessionPassword=p;const d=await apiAdmin('/api/admin-reviews');adminLoginForm.hidden=true;adminPanel.removeAttribute('hidden');renderAdminReviews(d.reviews||[]);await loadAdminCreators();showToast('🔓 Mode modification activé.')}catch(err){adminSessionPassword='';showToast('❌ '+err.message)}finally{b.disabled=false;b.textContent='Se connecter'}});
+adminRefresh?.addEventListener('click',loadAdminReviews);adminReviewsList?.addEventListener('click',async e=>{const b=e.target.closest('[data-delete-review]');if(!b)return;if(!confirm('Supprimer cet avis du site ?'))return;b.disabled=true;try{const d=await apiAdmin('/api/admin-reviews',{method:'DELETE',body:JSON.stringify({id:b.dataset.deleteReview})});renderAdminReviews(d.reviews||[]);await loadApprovedReviews();showToast('🗑️ Avis supprimé.')}catch(err){showToast('❌ '+err.message);b.disabled=false}});
 
-// ===== Espace Modifier / gestion des avis =====
-const adminModal = document.getElementById('admin-modal');
-const openAdminBtn = document.getElementById('open-admin');
-const adminLoginForm = document.getElementById('admin-login-form');
-const adminPassword = document.getElementById('admin-password');
-const adminPanel = document.getElementById('admin-panel');
-const adminReviewsList = document.getElementById('admin-reviews-list');
-const adminRefresh = document.getElementById('admin-refresh');
-let adminSessionPassword = '';
+// ===== Gestion des créateurs =====
+const creatorsList=document.getElementById('creators-list'),adminCreatorsList=document.getElementById('admin-creators-list'),creatorForm=document.getElementById('creator-form');let editingCreatorId='';
+function renderCreators(items){if(!creatorsList)return;if(!items.length){creatorsList.innerHTML='<p class="reviews-empty">Aucun créateur pour le moment.</p>';return}creatorsList.innerHTML=items.map(c=>`<article class="creator-card reveal visible"><div class="creator-avatar">${c.photo?`<img src="${escapeHtml(c.photo)}" alt="${escapeHtml(c.name)}">`:'👤'}</div><h3>${escapeHtml(c.name)}</h3><p class="creator-role">${escapeHtml(c.role)}</p><p class="creator-desc">${escapeHtml(c.description)}</p><span class="creator-status">${escapeHtml(c.status)}</span><div class="creator-projects"><strong>PROJETS RÉALISÉS</strong><span>${escapeHtml(c.projects)}</span></div>${c.link?`<a class="btn secondary" href="${escapeHtml(c.link)}" target="_blank" rel="noopener">Voir les projets →</a>`:''}</article>`).join('')}
+function renderAdminCreators(items){if(!adminCreatorsList)return;adminCreatorsList.innerHTML=items.length?items.map(c=>`<article class="admin-creator-item"><div><strong>${escapeHtml(c.name)}</strong><small>${escapeHtml(c.status)}</small></div><div class="admin-form-actions"><button class="btn secondary" data-edit-creator="${escapeHtml(c.id)}">✏️ Modifier</button><button class="admin-delete" data-delete-creator="${escapeHtml(c.id)}">🗑️ Supprimer</button></div></article>`).join(''):'<p class="admin-empty">Aucun créateur.</p>'}
+async function loadCreators(){try{const r=await fetch('/creators.json?v='+Date.now(),{cache:'no-store'});const d=r.ok?await r.json():[];renderCreators(Array.isArray(d)?d:[])}catch{renderCreators([])}}
+async function loadAdminCreators(){try{const d=await apiAdmin('/api/admin-creators');renderAdminCreators(d.creators||[])}catch(e){adminCreatorsList.innerHTML=`<p class="admin-error">${escapeHtml(e.message)}</p>`}}
+function resetCreatorForm(){editingCreatorId='';creatorForm.reset();document.getElementById('creator-id').value='';creatorForm.hidden=true}
+document.getElementById('creator-new')?.addEventListener('click',()=>{resetCreatorForm();creatorForm.hidden=false;document.getElementById('creator-name').focus()});document.getElementById('creator-cancel')?.addEventListener('click',resetCreatorForm);
+adminCreatorsList?.addEventListener('click',async e=>{const edit=e.target.closest('[data-edit-creator]'),del=e.target.closest('[data-delete-creator]');try{if(edit){const d=await apiAdmin('/api/admin-creators');const c=(d.creators||[]).find(x=>String(x.id)===String(edit.dataset.editCreator));if(!c)return;editingCreatorId=c.id;document.getElementById('creator-id').value=c.id;document.getElementById('creator-name').value=c.name||'';document.getElementById('creator-role').value=c.role||'';document.getElementById('creator-status').value=c.status||'';document.getElementById('creator-projects').value=c.projects||'';document.getElementById('creator-link').value=c.link||'';document.getElementById('creator-description').value=c.description||'';document.getElementById('creator-photo').value='';creatorForm.hidden=false;creatorForm.scrollIntoView({behavior:'smooth',block:'center'})}else if(del){if(!confirm('Supprimer ce créateur ?'))return;const d=await apiAdmin('/api/admin-creators',{method:'DELETE',body:JSON.stringify({id:del.dataset.deleteCreator})});renderAdminCreators(d.creators||[]);renderCreators(d.creators||[]);showToast('🗑️ Créateur supprimé.')}}catch(err){showToast('❌ '+err.message)}});
+creatorForm?.addEventListener('submit',async e=>{e.preventDefault();const file=document.getElementById('creator-photo').files[0];let photoData='';if(file){try{photoData=await fileToDataUrl(file,700*1024)}catch(err){return showToast('⚠️ '+err.message)}}const body={id:editingCreatorId||undefined,name:document.getElementById('creator-name').value.trim(),role:document.getElementById('creator-role').value.trim(),status:document.getElementById('creator-status').value.trim(),projects:document.getElementById('creator-projects').value.trim(),link:document.getElementById('creator-link').value.trim(),description:document.getElementById('creator-description').value.trim()};if(photoData)body.photoData=photoData;const btn=creatorForm.querySelector('button[type=submit]');btn.disabled=true;try{const d=await apiAdmin('/api/admin-creators',{method:'POST',body:JSON.stringify(body)});renderAdminCreators(d.creators||[]);renderCreators(d.creators||[]);resetCreatorForm();showToast('✅ Créateur enregistré.')}catch(err){showToast('❌ '+err.message)}finally{btn.disabled=false}});
 
-function closeAdmin() {
-  adminModal?.classList.remove('open');
-  adminModal?.setAttribute('aria-hidden', 'true');
-}
-
-function openAdmin() {
-  adminModal?.classList.add('open');
-  adminModal?.setAttribute('aria-hidden', 'false');
-  if (!adminSessionPassword) {
-    adminPanel?.setAttribute('hidden', '');
-    setTimeout(() => adminPassword?.focus(), 50);
-  }
-}
-
-openAdminBtn?.addEventListener('click', openAdmin);
-document.querySelectorAll('[data-close-admin]').forEach(el => el.addEventListener('click', closeAdmin));
-document.addEventListener('keydown', event => { if (event.key === 'Escape' && adminModal?.classList.contains('open')) closeAdmin(); });
-
-function renderAdminReviews(reviews) {
-  if (!adminReviewsList) return;
-  if (!reviews.length) {
-    adminReviewsList.innerHTML = '<p class="admin-empty">Aucun avis publié.</p>';
-    return;
-  }
-  adminReviewsList.innerHTML = reviews.map(review => `
-    <article class="admin-review-item">
-      <div class="admin-review-top">
-        <strong>${escapeHtml(review.pseudo)}</strong>
-        <span class="admin-review-stars">${'★'.repeat(review.stars)}${'☆'.repeat(5-review.stars)}</span>
-      </div>
-      <p>${escapeHtml(review.text)}</p>
-      <button class="admin-delete" type="button" data-delete-review="${escapeHtml(review.id)}">🗑️ Supprimer</button>
-    </article>
-  `).join('');
-}
-
-async function loadAdminReviews() {
-  if (!adminSessionPassword) return;
-  if (adminReviewsList) adminReviewsList.innerHTML = '<p class="admin-empty">Chargement...</p>';
-  try {
-    const response = await fetch('/api/admin-reviews', {
-      headers: { 'X-Admin-Password': adminSessionPassword },
-      cache: 'no-store'
-    });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || 'Impossible de charger les avis.');
-    renderAdminReviews(Array.isArray(data.reviews) ? data.reviews : []);
-  } catch (error) {
-    if (adminReviewsList) adminReviewsList.innerHTML = `<p class="admin-error">${escapeHtml(error.message)}</p>`;
-  }
-}
-
-adminLoginForm?.addEventListener('submit', async event => {
-  event.preventDefault();
-  const password = adminPassword?.value || '';
-  if (!password) return;
-  const button = adminLoginForm.querySelector('button[type="submit"]');
-  if (button) { button.disabled = true; button.textContent = 'Vérification...'; }
-  try {
-    const response = await fetch('/api/admin-reviews', {
-      headers: { 'X-Admin-Password': password },
-      cache: 'no-store'
-    });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || 'Mot de passe incorrect.');
-    adminSessionPassword = password;
-    adminLoginForm.hidden = true;
-    adminPanel?.removeAttribute('hidden');
-    renderAdminReviews(Array.isArray(data.reviews) ? data.reviews : []);
-    showToast('🔓 Mode modification activé.');
-  } catch (error) {
-    showToast('❌ ' + error.message);
-  } finally {
-    if (button) { button.disabled = false; button.textContent = 'Se connecter'; }
-  }
-});
-
-adminRefresh?.addEventListener('click', loadAdminReviews);
-
-adminReviewsList?.addEventListener('click', async event => {
-  const button = event.target.closest('[data-delete-review]');
-  if (!button || !adminSessionPassword) return;
-  if (!confirm('Supprimer cet avis du site ?')) return;
-  button.disabled = true;
-  button.textContent = 'Suppression...';
-  try {
-    const response = await fetch('/api/admin-reviews', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json', 'X-Admin-Password': adminSessionPassword },
-      body: JSON.stringify({ id: button.dataset.deleteReview })
-    });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || 'Impossible de supprimer cet avis.');
-    renderAdminReviews(Array.isArray(data.reviews) ? data.reviews : []);
-    await loadApprovedReviews();
-    showToast('🗑️ Avis supprimé.');
-  } catch (error) {
-    showToast('❌ ' + error.message);
-    button.disabled = false;
-    button.textContent = '🗑️ Supprimer';
-  }
-});
+document.querySelectorAll('[data-admin-tab]').forEach(tab=>tab.addEventListener('click',()=>{document.querySelectorAll('.admin-tab').forEach(x=>x.classList.remove('active'));tab.classList.add('active');const reviews=document.getElementById('admin-reviews-panel'),creators=document.getElementById('admin-creators-panel');if(tab.dataset.adminTab==='creators'){reviews.hidden=true;creators.hidden=false;loadAdminCreators()}else{creators.hidden=true;reviews.hidden=false;loadAdminReviews()}}));
+loadCreators();

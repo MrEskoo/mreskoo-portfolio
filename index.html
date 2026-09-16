@@ -17,6 +17,7 @@
       <a href="#accueil">Accueil</a>
       <a href="#apropos">À propos</a>
       <a href="#montages">Mes montages</a>
+      <a href="#createurs">Créateurs</a>
       <a href="#fonctionnement">Fonctionnement</a>
       <a href="#tarifs">Tarifs</a>
       <a href="#avis">Avis</a>
@@ -173,26 +174,32 @@
       </div>
     </section>
 
+    <section id="createurs" class="section creators-section">
+      <div class="section-title reveal">
+        <p class="eyebrow">MES COLLABORATIONS</p>
+        <h2>Créateurs avec qui je <span>travaille</span></h2>
+        <p>Quelques créateurs avec qui j’ai réalisé des projets.</p>
+      </div>
+      <div id="creators-list" class="creators-grid">
+        <p class="reviews-empty">Chargement...</p>
+      </div>
+    </section>
+
     <section id="avis" class="section reviews-section">
       <div class="section-title reveal">
         <p class="eyebrow">ILS EN PARLENT</p>
-        <h2>Laissez un <span>avis</span></h2>
-        <p>Ton avis peut aider d’autres personnes à découvrir mon travail.</p>
+        <h2>Ce qu’ils pensent de <span>mon travail</span></h2>
+        <p>Les retours des créateurs avec qui j’ai travaillé.</p>
       </div>
 
-      <div class="reviews-layout">
-        <div class="reviews-card glass-card reveal">
-          <h3>⭐ Avis clients</h3>
-          <div id="reviews-list" class="reviews-list">
-            <p class="reviews-empty">Aucun avis publié pour le moment.</p>
-          </div>
-        </div>
+      <div class="review-action-card glass-card reveal review-action-wide">
+        <h3>Tu as travaillé avec moi ?</h3>
+        <p>Laisse ton retour avec ta photo de profil, les formats que j’ai montés pour toi et le lien de ta chaîne.</p>
+        <button class="btn primary" type="button" id="open-review">Laisser un avis</button>
+      </div>
 
-        <div class="review-action-card glass-card reveal">
-          <h3>Tu veux laisser ton avis ?</h3>
-          <p>Choisis tes étoiles, ton pseudo et écris ton avis.</p>
-          <button class="btn primary" type="button" id="open-review">Laisser un avis</button>
-        </div>
+      <div id="reviews-list" class="reviews-grid">
+        <p class="reviews-empty">Aucun avis publié pour le moment.</p>
       </div>
 
       <div class="review-modal" id="review-modal" aria-hidden="true">
@@ -200,23 +207,37 @@
         <div class="review-modal-box glass-card" role="dialog" aria-modal="true" aria-labelledby="review-title">
           <button class="review-close" type="button" data-close-review aria-label="Fermer">×</button>
           <h3 id="review-title">Laisser un avis</h3>
-          <p class="review-hint">Choisis une note, puis renseigne ton pseudo et ton avis.</p>
-
-          <div class="star-picker" id="star-picker" aria-label="Choisir une note sur 5">
-            <button type="button" class="star" data-star="1" aria-label="1 étoile">★</button>
-            <button type="button" class="star" data-star="2" aria-label="2 étoiles">★</button>
-            <button type="button" class="star" data-star="3" aria-label="3 étoiles">★</button>
-            <button type="button" class="star" data-star="4" aria-label="4 étoiles">★</button>
-            <button type="button" class="star" data-star="5" aria-label="5 étoiles">★</button>
-          </div>
+          <p class="review-hint">Toutes les informations seront affichées sur la carte de ton avis.</p>
 
           <form id="review-form" class="review-form">
+            <label class="file-label">📷 Photo de profil
+              <input id="review-photo" type="file" accept="image/png,image/jpeg,image/webp" required>
+            </label>
             <input id="review-pseudo" name="pseudo" type="text" maxlength="30" placeholder="Ton pseudo" required>
+
+            <div class="types-field">
+              <strong>🎬 Types de vidéos montées</strong>
+              <div class="type-options">
+                <label><input type="checkbox" name="videoType" value="TikTok"> TikTok</label>
+                <label><input type="checkbox" name="videoType" value="YouTube Shorts"> YouTube Shorts</label>
+                <label><input type="checkbox" name="videoType" value="Vidéo YouTube"> Vidéo YouTube</label>
+                <label><input type="checkbox" name="videoType" value="Gaming"> Gaming</label>
+                <label><input type="checkbox" name="videoType" value="Autre"> Autre</label>
+              </div>
+            </div>
+
+            <input id="review-channel" name="channel" type="url" placeholder="Lien de ta chaîne (https://...)" required>
+
+            <div class="star-picker" id="star-picker" aria-label="Choisir une note sur 5">
+              <button type="button" class="star" data-star="1">★</button><button type="button" class="star" data-star="2">★</button><button type="button" class="star" data-star="3">★</button><button type="button" class="star" data-star="4">★</button><button type="button" class="star" data-star="5">★</button>
+            </div>
+            <div class="half-note">Clique sur la moitié gauche d’une étoile pour mettre une demi-étoile.</div>
+
             <textarea id="review-text" name="avis" rows="5" placeholder="Ton avis..." required></textarea>
             <div class="review-counter"><span id="review-count">0</span>/50 caractères (les espaces ne comptent pas)</div>
             <button class="btn primary" type="submit">Envoyer mon avis</button>
           </form>
-          <p class="review-note">Ton avis sera envoyé pour validation avant d’apparaître publiquement.</p>
+          <p class="review-note">Ton avis sera envoyé sur Discord pour validation avant publication.</p>
         </div>
       </div>
     </section>
@@ -270,23 +291,41 @@
     <div class="admin-backdrop" data-close-admin></div>
     <div class="admin-box glass-card" role="dialog" aria-modal="true" aria-labelledby="admin-title">
       <button class="review-close" type="button" data-close-admin aria-label="Fermer">×</button>
-      <h3 id="admin-title">Modifier les avis</h3>
-      <p class="review-hint">Entre ton mot de passe pour gérer les avis publiés.</p>
+      <h3 id="admin-title">Modifier le portfolio</h3>
+      <p class="review-hint">Entre ton mot de passe pour gérer les avis et les créateurs.</p>
       <form id="admin-login-form" class="review-form">
         <input id="admin-password" type="password" placeholder="Mot de passe" autocomplete="current-password" required>
         <button class="btn primary" type="submit">Se connecter</button>
       </form>
       <div id="admin-panel" class="admin-panel" hidden>
-        <div class="admin-panel-head">
-          <strong>Avis publiés</strong>
-          <button class="btn secondary" type="button" id="admin-refresh">Actualiser</button>
+        <div class="admin-tabs">
+          <button type="button" class="admin-tab active" data-admin-tab="reviews">Avis</button>
+          <button type="button" class="admin-tab" data-admin-tab="creators">Créateurs</button>
         </div>
-        <div id="admin-reviews-list" class="admin-reviews-list"></div>
+        <section id="admin-reviews-panel" class="admin-tab-panel">
+          <div class="admin-panel-head"><strong>Avis publiés</strong><button class="btn secondary" type="button" id="admin-refresh">Actualiser</button></div>
+          <div id="admin-reviews-list" class="admin-reviews-list"></div>
+        </section>
+        <section id="admin-creators-panel" class="admin-tab-panel" hidden>
+          <div class="admin-panel-head"><strong>Créateurs avec qui je travaille</strong><button class="btn secondary" type="button" id="creator-new">+ Ajouter</button></div>
+          <form id="creator-form" class="review-form admin-creator-form" hidden>
+            <input id="creator-id" type="hidden">
+            <input id="creator-name" type="text" placeholder="Nom du créateur" required>
+            <input id="creator-role" type="text" placeholder="Rôle (ex. 🎥 Créateur)">
+            <input id="creator-status" type="text" placeholder="Statut (ex. Collaboration)">
+            <input id="creator-projects" type="text" placeholder="Projets réalisés (ex. 3 Shorts • 1 vidéo YouTube)">
+            <input id="creator-link" type="url" placeholder="Lien de la chaîne (optionnel)">
+            <textarea id="creator-description" rows="4" placeholder="Description"></textarea>
+            <label class="file-label">📷 Photo du créateur <input id="creator-photo" type="file" accept="image/png,image/jpeg,image/webp"></label>
+            <div class="admin-form-actions"><button class="btn primary" type="submit">Enregistrer</button><button class="btn secondary" type="button" id="creator-cancel">Annuler</button></div>
+          </form>
+          <div id="admin-creators-list" class="admin-creators-list"></div>
+        </section>
       </div>
     </div>
   </div>
 
   <div id="toast"></div>
-  <script src="script.js?v=6"></script>
+  <script src="script.js?v=7"></script>
 </body>
 </html>
