@@ -110,46 +110,21 @@
 
     <section id="montages" class="section">
       <div class="section-title reveal">
-        <p class="eyebrow">MON TRAVAIL</p>
-        <h2>Mes <span>montages</span></h2>
+        <p class="eyebrow" id="montages-eyebrow">MON TRAVAIL</p>
+        <h2 id="montages-title">Mes <span>montages</span></h2>
+        <p id="montages-description">Découvre quelques-unes de mes réalisations.</p>
       </div>
-      <div class="projects">
-        <article class="project-card reveal">
-          <div class="video-player">
-            <iframe
-              src="https://www.youtube-nocookie.com/embed/AE0JG79S6To?rel=0&modestbranding=1"
-              title="Ma première réalisation — YouTube Short"
-              loading="eager"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
-          </div>
-          <div class="project-info">
-            <p class="tag">YouTube Short</p>
-            <h3>Ma première réalisation</h3>
-            <a href="https://www.youtube.com/watch?v=AE0JG79S6To" target="_blank" rel="noopener" class="project-link">Regarder le montage ↗</a>
-          </div>
-        </article>
-        <article class="project-card reveal">
-          <div class="video-player">
-            <video controls preload="metadata" playsinline>
-              <source src="montage2.mp4" type="video/mp4">
-              Ton navigateur ne peut pas lire cette vidéo.
-            </video>
-          </div>
-          <div class="project-info">
-            <p class="tag">Montage vidéo</p>
-            <h3>Nouvelle réalisation</h3>
-            <p>Regarde directement le montage sur le portfolio.</p>
-          </div>
-        </article>
-        <article class="project-card empty reveal">
-          <div class="empty-icon">＋</div>
-          <h3>Prochain montage</h3>
-          <p>De nouvelles réalisations arriveront bientôt.</p>
-        </article>
+      <div id="projects-list" class="projects"><p class="reviews-empty">Chargement...</p></div>
+    </section>
+
+    <section id="creator-projects" class="section creator-projects-section" hidden>
+      <div class="section-title reveal visible">
+        <p class="eyebrow">PROJETS DU CRÉATEUR</p>
+        <h2 id="creator-projects-title">Ses <span>montages</span></h2>
+        <p id="creator-projects-description">Tous les montages que j’ai réalisés pour ce créateur.</p>
       </div>
+      <div id="creator-projects-list" class="projects"><p class="reviews-empty">Aucun montage pour le moment.</p></div>
+      <div class="creator-projects-back"><a class="btn secondary" href="#createurs">← Retour aux créateurs</a></div>
     </section>
 
     <section id="tarifs" class="section">
@@ -301,6 +276,7 @@
         <div class="admin-tabs">
           <button type="button" class="admin-tab active" data-admin-tab="reviews">Avis</button>
           <button type="button" class="admin-tab" data-admin-tab="creators">Créateurs</button>
+          <button type="button" class="admin-tab" data-admin-tab="projects">Mes montages</button>
         </div>
         <section id="admin-reviews-panel" class="admin-tab-panel">
           <div class="admin-panel-head"><strong>Avis publiés</strong><button class="btn secondary" type="button" id="admin-refresh">Actualiser</button></div>
@@ -321,11 +297,34 @@
           </form>
           <div id="admin-creators-list" class="admin-creators-list"></div>
         </section>
+        <section id="admin-projects-panel" class="admin-tab-panel" hidden>
+          <div class="admin-panel-head"><strong>Mes montages — gestion complète</strong><button class="btn secondary" type="button" id="project-new">+ Ajouter</button></div>
+          <form id="project-form" class="review-form admin-creator-form" hidden>
+            <input id="project-id" type="hidden">
+            <input id="project-title" type="text" placeholder="Titre du montage" required>
+            <input id="project-type" type="text" placeholder="Type (ex. YouTube Short)">
+            <textarea id="project-description" rows="3" placeholder="Description du montage"></textarea>
+            <select id="project-kind"><option value="file">Vidéo MP4 / fichier</option><option value="youtube">Vidéo YouTube intégrée</option></select>
+            <input id="project-video" type="text" placeholder="Fichier (ex. montage2.mp4) ou URL YouTube embed">
+            <input id="project-link" type="url" placeholder="Lien à ouvrir (optionnel)">
+            <select id="project-creator"><option value="">Aucun créateur associé</option></select>
+            <label class="file-label">🎬 Ajouter/remplacer une vidéo MP4 <input id="project-video-file" type="file" accept="video/mp4,video/webm,video/quicktime"></label>
+            <div class="admin-form-actions"><button class="btn primary" type="submit">Enregistrer</button><button class="btn secondary" type="button" id="project-cancel">Annuler</button></div>
+          </form>
+          <form id="projects-settings-form" class="review-form admin-creator-form">
+            <strong>✏️ Modifier la catégorie « Mes montages »</strong>
+            <input id="projects-eyebrow" type="text" placeholder="Petit titre">
+            <input id="projects-title" type="text" placeholder="Titre de la catégorie">
+            <textarea id="projects-description" rows="2" placeholder="Description de la catégorie"></textarea>
+            <button class="btn primary" type="submit">Enregistrer la catégorie</button>
+          </form>
+          <div id="admin-projects-list" class="admin-creators-list"></div>
+        </section>
       </div>
     </div>
   </div>
 
   <div id="toast"></div>
-  <script src="script.js?v=7"></script>
+  <script src="script.js?v=8"></script>
 </body>
 </html>

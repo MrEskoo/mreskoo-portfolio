@@ -1,9 +1,23 @@
-CONFIGURATION À FAIRE DANS VERCEL
+CONFIGURATION VERCEL
 
-Ajoute une variable d'environnement :
+Variables déjà utilisées :
+- ADMIN_PASSWORD
+- DISCORD_BOT_TOKEN
+- DISCORD_CHANNEL_ID
+- DISCORD_OWNER_ID
+- DISCORD_PUBLIC_KEY
+- GITHUB_OWNER
+- GITHUB_REPO
+- GITHUB_BRANCH
+- GITHUB_TOKEN
 
-ADMIN_PASSWORD = ton mot de passe secret
+NOUVEAU : aucun secret supplémentaire.
 
-Cette valeur reste côté serveur. Ne mets pas le mot de passe dans index.html ou script.js.
+Dans Modifier > Mes montages :
+- modifie le petit titre, le titre et la description de la catégorie
+- ajoute, modifie ou supprime un montage
+- choisis le type de vidéo (fichier MP4 ou YouTube)
+- associe un montage à un créateur pour qu'il apparaisse dans sa page "Voir les projets"
+- modifie le titre, type, description, vidéo et lien de chaque montage
 
-Le bouton « Modifier » apparaît en haut à droite du site. Il demande ce mot de passe avant d'afficher les avis publiés et leurs boutons « Supprimer ».
+Les vidéos MP4 ajoutées depuis le panneau Modifier sont limitées à 4 Mo.

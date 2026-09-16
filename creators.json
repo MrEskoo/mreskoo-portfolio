@@ -1,13 +1,13 @@
 [
   {
     "id": "skeletox",
-    "name": "Snayz",
+    "name": "Skeletox",
+    "photo": "",
     "role": "🎥 Créateur",
-    "status": "Collaboration en cours",
-    "projects": "1 Shorts • 1 vidéo YouTube",
-    "link": "https://www.youtube.com/@Snayz_yt1",
-    "description": "Montages de short et vidéo YouTube réalisés pour sa chaîne.",
-    "photo": "https://raw.githubusercontent.com/MrEskoo/mreskoo-portfolio/main/assets/creators/4af67351-21e5-486d-ba8a-64683b84a77d.jpg"
+    "description": "Montages courts et vidéo YouTube réalisés pour sa chaîne.",
+    "status": "Collaboration",
+    "projects": "3 Shorts • 1 vidéo YouTube",
+    "link": ""
   },
   {
     "id": "noah-panchau-2",
@@ -27,6 +27,16 @@
     "description": "Montage Short / TikTok réalisé pour sa chaîne.",
     "status": "Collaboration",
     "projects": "1 Short / TikTok",
+    "link": ""
+  },
+  {
+    "id": "fnnino67",
+    "name": "FnNino67",
+    "photo": "",
+    "role": "🎥 Créateur",
+    "description": "Montage vidéo YouTube réalisé pour sa chaîne.",
+    "status": "Collaboration",
+    "projects": "1 vidéo YouTube",
     "link": ""
   }
 ]
