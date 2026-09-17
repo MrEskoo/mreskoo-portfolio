@@ -1,12 +1,12 @@
 [
   {
     "id": "skeletox",
-    "name": "Skeletox",
-    "photo": "",
+    "name": "Snayz",
     "role": "🎥 Créateur",
-    "description": "Montages courts et vidéo YouTube réalisés pour sa chaîne.",
-    "status": "Collaboration",
+    "status": "Collaboration en cours",
     "projects": "3 Shorts • 1 vidéo YouTube",
-    "link": ""
+    "link": "https://www.youtube.com/@Snayz_yt1",
+    "description": "Montages courts et vidéo YouTube réalisés pour sa chaîne.",
+    "photo": "https://raw.githubusercontent.com/MrEskoo/mreskoo-portfolio/main/assets/creators/6824b12c-4d7e-4e0e-bc38-b5872079ce0c.jpg"
   }
 ]
