@@ -1,22 +1,42 @@
 [
   {
     "id": "skeletox",
-    "name": "Snayz",
+    "name": "Skeletox",
+    "photo": "",
     "role": "🎥 Créateur",
-    "status": "Collaboration en cours",
-    "projects": "3 Shorts • 1 vidéo YouTube",
-    "link": "https://www.youtube.com/@Snayz_yt1",
     "description": "Montages courts et vidéo YouTube réalisés pour sa chaîne.",
-    "photo": "https://raw.githubusercontent.com/MrEskoo/mreskoo-portfolio/main/assets/creators/6824b12c-4d7e-4e0e-bc38-b5872079ce0c.jpg"
+    "status": "Collaboration",
+    "projects": "3 Shorts • 1 vidéo YouTube",
+    "link": ""
   },
   {
-    "id": "77e0a364-95e4-4bfb-8bd1-ced659c339b5",
-    "name": "JzK Organization",
-    "role": "Team Ea-Sport",
+    "id": "noah-panchau-2",
+    "name": "Noah Panchaud 2",
+    "photo": "",
+    "role": "🎥 Dé rush uniquement",
+    "description": "Je réalise actuellement uniquement le dérush de ses vidéos.",
     "status": "Collaboration en cours",
-    "projects": "3 Shorts • 1 vidéo YouTube",
-    "link": "https://www.tiktok.com/@jzk.organization?_r=1&_t=ZN-99mvlKt6xwU",
-    "description": "Je réalise principalement les vidéos d'annonce de nouveaux joueurs/joueuses",
-    "photo": "https://raw.githubusercontent.com/MrEskoo/mreskoo-portfolio/main/assets/creators/a6c413b8-5f54-4c24-b37a-463a6493b489.jpg"
+    "projects": "2 vidéos dérushées",
+    "link": ""
+  },
+  {
+    "id": "tossy-yt",
+    "name": "TOSSY-YT",
+    "photo": "",
+    "role": "🎥 Créateur",
+    "description": "Montage Short / TikTok réalisé pour sa chaîne.",
+    "status": "Collaboration",
+    "projects": "1 Short / TikTok",
+    "link": ""
+  },
+  {
+    "id": "fnnino67",
+    "name": "FnNino67",
+    "photo": "",
+    "role": "🎥 Créateur",
+    "description": "Montage vidéo YouTube réalisé pour sa chaîne.",
+    "status": "Collaboration",
+    "projects": "1 vidéo YouTube",
+    "link": ""
   }
 ]

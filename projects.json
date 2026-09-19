@@ -10,10 +10,10 @@
       "title": "Ma première réalisation",
       "type": "YouTube Short",
       "description": "Une réalisation disponible directement sur le portfolio.",
-      "videoKind": "youtube",
       "video": "https://www.youtube-nocookie.com/embed/AE0JG79S6To?rel=0&modestbranding=1",
+      "videoKind": "youtube",
       "link": "https://www.youtube.com/watch?v=AE0JG79S6To",
-      "creatorId": "skeletox"
+      "creatorId": ""
     },
     {
       "id": "montage-2",
