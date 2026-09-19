@@ -14,16 +14,6 @@
       "videoKind": "youtube",
       "link": "https://www.youtube.com/watch?v=AE0JG79S6To",
       "creatorId": ""
-    },
-    {
-      "id": "montage-2",
-      "title": "Nouvelle réalisation",
-      "type": "Montage vidéo",
-      "description": "Regarde directement le montage sur le portfolio.",
-      "video": "montage2.mp4",
-      "videoKind": "file",
-      "link": "",
-      "creatorId": ""
     }
   ]
 }
